@@ -4,6 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Console;
+using TamagotchiLib.Menu;
+using TamagotchiLib.Jatekmenet;
+using TamagotchiLib.Models;
+
 
 namespace TamagotchiLib.Accounts
 {
@@ -18,28 +22,20 @@ namespace TamagotchiLib.Accounts
             // Dinamikusan meghatározzuk a projekt gyökérkönyvtárát
             var currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var projectDirectory = Directory.GetParent(currentDirectory).Parent.Parent.Parent.Parent.FullName;
-            var classLibDirectory = Path.Combine(projectDirectory, "ClassLib");
-            FilePath = Path.Combine(classLibDirectory, "settings.txt");
+            FilePath = Path.Combine(projectDirectory, "settings.txt");
 
-            // Ellenőrizzük, hogy a fájl létezik-e, ha nem, akkor hozzuk létre és írjunk bele egy fejlécet
+            // Ellenőrizzük, hogy a fájl létezik-e
             if (!File.Exists(FilePath))
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(FilePath)); // Győződjünk meg arról, hogy a mappa létezik
-                using (StreamWriter sw = new StreamWriter(FilePath, false))
-                {
-                    sw.WriteLine("Nev;Jelszo;Pisztoly;Ak;Kotszer;Koktel;Joint;Hp;LetrehozasIdeje");
-                }
+                Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
+                File.WriteAllText(FilePath, "Nev;Jelszo;Pisztoly;Ak;Kotszer;Koktel;Joint;Hp;LetrehozasIdeje\n");
             }
 
-            // Beállítjuk a valasztottFiokNev változót az első fiók nevére
+            // Beállítjuk a valasztottFiokNev változót az első fiók nevére, ha van
             string[] fiokok = File.ReadAllLines(FilePath);
             if (fiokok.Length > 1)
             {
                 valasztottFiokNev = fiokok[1].Split(';')[0];
-            }
-            else
-            {
-                valasztottFiokNev = null;
             }
         }
 
@@ -50,9 +46,11 @@ namespace TamagotchiLib.Accounts
                 Console.Clear();
                 string prompt = "Fiókkezelés\n";
                 string[] opciok = { "Új fiók", "Fiókjaim", "Fiók törlése", "Összes fiók törlése", "Vissza a főmenübe" };
-                Menu menu = new Menu(prompt, opciok);
-                int Megjelolt = menu.Futas();
-                Jatekmenet jatekmenet = new Jatekmenet();
+
+                // Használjuk a teljes namespace-et az ütközés elkerülése érdekében
+                TamagotchiLib.Menu.Menu menu = new TamagotchiLib.Menu.Menu(prompt, opciok);
+                int Megjelolt = menu.Run();
+                JatekmenetView jatekmenetView = new JatekmenetView(new Pet("Alap Macska"));
 
                 switch (Megjelolt)
                 {
@@ -66,30 +64,18 @@ namespace TamagotchiLib.Accounts
                         FiokTorles();
                         break;
                     case 3:
-                        AdminJelszoBelekerese(); // Admin jelszó kérése az összes fiók törléséhez
+                        AdminJelszoBelekerese();
                         break;
                     case 4:
-                        // Ha van már legalább egy fiók és nem választott ki másik fiókot,
-                        // akkor a kilépéskor automatikusan a fiókok közül az első lesz kiválasztva
-                        if (FiokokSzama() > 0 && string.IsNullOrEmpty(valasztottFiokNev))
-                        {
-                            string[] fiokok = File.ReadAllLines(FilePath);
-                            valasztottFiokNev = fiokok[1].Split(';')[0]; // Az első fiók neve lesz a választott
-                        }
-
                         if (!string.IsNullOrEmpty(valasztottFiokNev))
                         {
-                            jatekmenet.MainFuttatasa();
+                            jatekmenetView.MainFuttatasa();
                         }
                         else
                         {
                             Console.WriteLine("Legalább egy fiók létrehozása szükséges.");
-                            Console.WriteLine("Nyomj meg egy gombot a folytatáshoz.");
                             Console.ReadKey();
                         }
-                        break;
-                    default:
-                        Console.WriteLine("Érvénytelen opció, próbáld újra.");
                         break;
                 }
             }

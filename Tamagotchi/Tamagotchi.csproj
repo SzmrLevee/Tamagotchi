@@ -7,4 +7,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Program.cs~RF13bbf7b.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TamagotchiLib\TamagotchiLib.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -14,8 +14,7 @@ namespace TamagotchiLib.Accounts
         {
             var currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var projectDirectory = Directory.GetParent(currentDirectory).Parent.Parent.Parent.Parent.FullName;
-            var classLibDirectory = Path.Combine(projectDirectory, "ClassLib");
-            FilePath = Path.Combine(classLibDirectory, "settings.txt");
+            FilePath = Path.Combine(projectDirectory, "settings.txt");
         }
 
         private string[] GetFiokSorok()
@@ -53,17 +52,20 @@ namespace TamagotchiLib.Accounts
             UpdateFiokSorok(fiokok);
         }
 
-        public void NovelemPisztoly(string nev) => ModifyFiokData(nev, 2, 1);
-        public void CsokkentemPisztoly(string nev) => ModifyFiokData(nev, 2, -1);
-        public void NovelemAk(string nev) => ModifyFiokData(nev, 3, 1);
-        public void CsokkentemAk(string nev) => ModifyFiokData(nev, 3, -1);
-        public void NovelemKotszer(string nev) => ModifyFiokData(nev, 4, 1);
-        public void CsokkentemKotszer(string nev) => ModifyFiokData(nev, 4, -1);
-        public void NovelemKoktel(string nev) => ModifyFiokData(nev, 5, 1);
-        public void CsokkentemKoktel(string nev) => ModifyFiokData(nev, 5, -1);
-        public void NovelemJoint(string nev) => ModifyFiokData(nev, 6, 1);
-        public void CsokkentemJoint(string nev) => ModifyFiokData(nev, 6, -1);
-        public void NovelemHp(string nev) => ModifyFiokData(nev, 7, 1);
-        public void CsokkentemHp(string nev) => ModifyFiokData(nev, 7, -1);
+        public void Novelem(string nev, string itemName, int amount)
+        {
+            int index = GetItemIndex(itemName);
+            if (index != -1)
+            {
+                ModifyFiokData(nev, index, amount);
+            }
+        }
+
+        private int GetItemIndex(string itemName)
+        {
+            string[] items = { "Pisztoly", "Ak", "Kotszer", "Koktel", "Joint", "Hp" };
+            return Array.IndexOf(items, itemName);
+        }
+
     }
 }
