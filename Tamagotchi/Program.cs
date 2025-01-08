@@ -5,6 +5,7 @@ using TamagotchiLib.Models;
 using TamagotchiLib.Jatekmenet;
 using TamagotchiLib.Animations;
 using TamagotchiLib;
+using TamagotchiLib.Utils; // Hozzáadás az IdoMulas és Interakciok használatához
 
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 Console.OutputEncoding = Encoding.GetEncoding(437);
@@ -13,9 +14,13 @@ Console.OutputEncoding = Encoding.GetEncoding(437);
 GameManager gameManager = new GameManager();
 gameManager.LoadPet();
 
+// IdoMulas és Interakciok inicializálása
+IdoMulas idoMulas = new IdoMulas(gameManager.CurrentPet);
+Interakciok interakciok = new Interakciok(gameManager.CurrentPet);
+
 bool exit = false;
 int selectedOption = 0;
-string[] options = { "Játék", "Bolt", "Kisállat állapota", "Kilépés" };
+string[] options = { "Játék", "Bolt", "Kisállat állapota", "Interakciók", "Kilépés" };
 
 while (!exit)
 {
@@ -53,13 +58,19 @@ while (!exit)
                 Console.Clear();
                 DisplayPetStatus(gameManager);
                 break;
-            case 3:  // "Kilépés"
+            case 3:  // "Interakciók"
+                DisplayInteractions(interakciok);
+                break;
+            case 4:  // "Kilépés"
                 gameManager.SavePet();  // Állat adatainak mentése kilépéskor
                 exit = true;
                 break;
         }
     }
 }
+
+// Időmúlás leállítása a program kilépésekor
+idoMulas.Stop();
 
 MenuUtils.ResetPrompt();
 MenuUtils.DisplayPromptOnce(gameManager.Prompt);
@@ -73,6 +84,53 @@ static void DisplayPetStatus(GameManager gameManager)
     Console.WriteLine(gameManager.CurrentPet.ToString());
     Console.WriteLine("\nNyomj egy gombot a folytatáshoz.");
     Console.ReadKey();
+}
+
+// Interakciók menü megjelenítése
+static void DisplayInteractions(Interakciok interakciok)
+{
+    Console.Clear();
+    string[] interactionOptions = { "Etetés", "Simogatás", "Séta", "Játék", "Gyógyítás", "Vissza" };
+    int selectedInteraction = 0;
+
+    while (true)
+    {
+        Console.Clear();
+        DisplayMenu("=== Interakciók ===", interactionOptions, selectedInteraction);
+
+        var key = Console.ReadKey(true);
+        if (key.Key == ConsoleKey.UpArrow)
+            selectedInteraction = (selectedInteraction == 0) ? interactionOptions.Length - 1 : selectedInteraction - 1;
+        else if (key.Key == ConsoleKey.DownArrow)
+            selectedInteraction = (selectedInteraction == interactionOptions.Length - 1) ? 0 : selectedInteraction + 1;
+        else if (key.Key == ConsoleKey.Enter)
+        {
+            if (selectedInteraction == interactionOptions.Length - 1)
+                break;
+
+            switch (selectedInteraction)
+            {
+                case 0:
+                    interakciok.Etet();
+                    break;
+                case 1:
+                    interakciok.Simogat();
+                    break;
+                case 2:
+                    interakciok.Setal();
+                    break;
+                case 3:
+                    interakciok.Jatek();
+                    break;
+                case 4:
+                    interakciok.Gyogyitas();
+                    break;
+            }
+
+            Console.WriteLine("Nyomj meg egy gombot a folytatáshoz.");
+            Console.ReadKey();
+        }
+    }
 }
 
 // Menük megjelenítése középre igazítva
@@ -104,6 +162,8 @@ static string CenterText(string text)
     int padding = (windowWidth - text.Length) / 2;
     return new string(' ', Math.Max(padding, 0)) + text;
 }
+
+
 
 //string menuPrompt = @"
 
