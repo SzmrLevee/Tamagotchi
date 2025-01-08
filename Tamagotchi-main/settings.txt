@@ -1,2 +1,0 @@
-Nev;Jelszo;Pisztoly;Ak;Kotszer;Koktel;Joint;Hp;LetrehozasIdeje
-a;a;0;0;0;0;0;100;2025-01-08 19:52:52
