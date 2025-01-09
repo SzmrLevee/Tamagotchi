@@ -8,10 +8,15 @@ namespace TamagotchiLib.Utils
 {
     public class GameManager
     {
+        public GameManager()
+        {
+            randomInterakciok = new RandomInterakciok();
+        }
 
         public string Prompt = @"
- _______         __  __            _____   ____  _______  _____  _    _  _____ 
-|__   __| /\    |  \/  |    /\    / ____| / __ \|__   __|/ ____|| |  | ||_   _|
+
+ ________         __  __            _____   ____  _______  _____  _    _  _____ 
+    | |    /\    |  \/  |    /\    / ____| / __ \|__   __|/ ____|| |  | ||_   _|
     | |   /  \   | \  / |   /  \  | |  __ | |  | |  | |  | |     | |__| |  | |  
     | |  / /\ \  | |\/| |  / /\ \ | | |_ || |  | |  | |  | |     |  __  |  | |  
     | | / ____ \ | |  | | / ____ \| |__| || |__| |  | |  | |____ | |  | | _| |_ 
@@ -136,6 +141,7 @@ namespace TamagotchiLib.Utils
 
         public Pet CurrentPet { get; private set; }
         private readonly FileManager fileManager = new FileManager("Data/pet_data.json");
+        private readonly RandomInterakciok randomInterakciok;
 
 
         public void LoadPet()
@@ -214,6 +220,11 @@ namespace TamagotchiLib.Utils
         public void DisplayStatus()
         {
             Console.WriteLine(CurrentPet.ToString());
+        }
+
+        public void RandomEvent()
+        {
+            randomInterakciok.RandomInteraction(CurrentPet);  // Véletlenszerű interakció kiváltása
         }
     }
 }
