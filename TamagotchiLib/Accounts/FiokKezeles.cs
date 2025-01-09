@@ -8,7 +8,7 @@ namespace TamagotchiLib.Accounts
 {
     public class FiokKezeles
     {
-        private static readonly string FilePath;
+        public static readonly string FilePath;
 
         static FiokKezeles()
         {

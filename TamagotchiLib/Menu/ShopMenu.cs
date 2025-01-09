@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TamagotchiLib.Utils;
 
 namespace TamagotchiLib.Menu
 {
@@ -14,18 +15,14 @@ namespace TamagotchiLib.Menu
             "1. Étel (100 pénz)",
             "2. Ital (50 pénz)",
             "3. Gyógyszer (150 pénz)",
-            "4. Játék (75 pénz)",
-            "5. Pihenő (30 pénz)",
-            "6. Hóember (200 pénz)",
-            "7. Csemege (120 pénz)",
-            "8. Tápláló étel (200 pénz)",
-            "9. Egészség javító ital (90 pénz)",
-            "10. Mágikus édesség (250 pénz)",
-            "11. Speciális gyógyszer (300 pénz)",
-            "12. Díszes játék (150 pénz)",
-            "13. Játékos cukorka (80 pénz)",
-            "14. Gyógyító fű (170 pénz)",
-            "15. Mega étel (500 pénz)"
+            "4. Csemege (120 pénz)",
+            "5. Tápláló étel (200 pénz)",
+            "6. Egészség javító ital (90 pénz)",
+            "7. Mágikus édesség (250 pénz)",
+            "8. Speciális gyógyszer (300 pénz)",
+            "9. Játékos cukorka (80 pénz)",
+            "10. Gyógyító fű (170 pénz)",
+            "11. Mega étel (500 pénz)"
         };
 
         public ShopMenu(GameManager gameManager)
@@ -108,50 +105,34 @@ namespace TamagotchiLib.Menu
                     itemPrice = 150;
                     break;
                 case 3:
-                    itemName = "Játék";
-                    itemPrice = 75;
-                    break;
-                case 4:
-                    itemName = "Pihenő";
-                    itemPrice = 30;
-                    break;
-                case 5:
-                    itemName = "Hóember";
-                    itemPrice = 200;
-                    break;
-                case 6:
                     itemName = "Csemege";
                     itemPrice = 120;
                     break;
-                case 7:
+                case 4:
                     itemName = "Tápláló étel";
                     itemPrice = 200;
                     break;
-                case 8:
+                case 5:
                     itemName = "Egészség javító ital";
                     itemPrice = 90;
                     break;
-                case 9:
+                case 6:
                     itemName = "Mágikus édesség";
                     itemPrice = 250;
                     break;
-                case 10:
+                case 7:
                     itemName = "Speciális gyógyszer";
                     itemPrice = 300;
                     break;
-                case 11:
-                    itemName = "Díszes játék";
-                    itemPrice = 150;
-                    break;
-                case 12:
+                case 8:
                     itemName = "Játékos cukorka";
                     itemPrice = 80;
                     break;
-                case 13:
+                case 9:
                     itemName = "Gyógyító fű";
                     itemPrice = 170;
                     break;
-                case 14:
+                case 10:
                     itemName = "Mega étel";
                     itemPrice = 500;
                     break;

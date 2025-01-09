@@ -4,182 +4,46 @@ using TamagotchiLib.Accounts;
 using TamagotchiLib.Models;
 using TamagotchiLib.Jatekmenet;
 using TamagotchiLib.Animations;
-using TamagotchiLib;
-using TamagotchiLib.Utils; // Hozzáadás az IdoMulas és Interakciok használatához
+using TamagotchiLib.Utils;
+
+//TODO: adatok visszatöltése, több macska megjelenítése
 
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 Console.OutputEncoding = Encoding.GetEncoding(437);
 
-// Program elindítása, kezdő GameManager példányosítása
-GameManager gameManager = new GameManager();
-gameManager.LoadPet();
+Console.WriteLine("Melyik animációt szeretnéd futtatni?:");
+string animationName = Console.ReadLine()!;
 
-// IdoMulas és Interakciok inicializálása
-IdoMulas idoMulas = new IdoMulas(gameManager.CurrentPet);
-Interakciok interakciok = new Interakciok(gameManager.CurrentPet);
-
-bool exit = false;
-int selectedOption = 0;
-string[] options = { "Játék", "Bolt", "Kisállat állapota", "Interakciók", "Kilépés" };
-
-while (!exit)
-{
-    Console.Clear();
-    DisplayMenu("=== Tamagotchi Főmenü ===", options, selectedOption);
-
-    var key = Console.ReadKey(true);
-    if (key.Key == ConsoleKey.UpArrow)
-        selectedOption = (selectedOption == 0) ? options.Length - 1 : selectedOption - 1;
-    else if (key.Key == ConsoleKey.DownArrow)
-        selectedOption = (selectedOption == options.Length - 1) ? 0 : selectedOption + 1;
-    else if (key.Key == ConsoleKey.Enter)
-    {
-        switch (selectedOption)
-        {
-            case 0:  // "Játék"
-                if (string.IsNullOrEmpty(Mentes.valasztottFiokNev))
-                {
-                    Mentes mentes = new Mentes();
-                    mentes.Fomenu();  // Ha nincs bejelentkezve, megjelenik a Fiókkezelés
-                }
-                else
-                {
-                    new JatekmenetView(gameManager.CurrentPet).MainFuttatasa();  // A Játékmenet megjelenítése
-                }
-                break;
-            case 1:  // "Bolt"
-                Console.Clear();
-                Console.WriteLine("\n=== Bolt Funkció ===\n");
-                Console.WriteLine("A bolt megjelenítése folyamatban...");
-                Console.WriteLine("Nyomj meg egy gombot a visszalépéshez.");
-                Console.ReadKey();
-                break;
-            case 2:  // "Kisállat állapota"
-                Console.Clear();
-                DisplayPetStatus(gameManager);
-                break;
-            case 3:  // "Interakciók"
-                DisplayInteractions(interakciok);
-                break;
-            case 4:  // "Kilépés"
-                gameManager.SavePet();  // Állat adatainak mentése kilépéskor
-                exit = true;
-                break;
-        }
-    }
-}
-
-// Időmúlás leállítása a program kilépésekor
-idoMulas.Stop();
-
-MenuUtils.ResetPrompt();
-MenuUtils.DisplayPromptOnce(gameManager.Prompt);
-
-// Kisállat státuszának megjelenítése
-static void DisplayPetStatus(GameManager gameManager)
-{
-    Console.ForegroundColor = ConsoleColor.Blue;
-    Console.WriteLine("\n=== Kisállat Állapota ===\n");
-    Console.ResetColor();
-    Console.WriteLine(gameManager.CurrentPet.ToString());
-    Console.WriteLine("\nNyomj egy gombot a folytatáshoz.");
-    Console.ReadKey();
-}
-
-// Interakciók menü megjelenítése
-static void DisplayInteractions(Interakciok interakciok)
-{
-    Console.Clear();
-    string[] interactionOptions = { "Etetés", "Simogatás", "Séta", "Játék", "Gyógyítás", "Vissza" };
-    int selectedInteraction = 0;
-
-    while (true)
-    {
-        Console.Clear();
-        DisplayMenu("=== Interakciók ===", interactionOptions, selectedInteraction);
-
-        var key = Console.ReadKey(true);
-        if (key.Key == ConsoleKey.UpArrow)
-            selectedInteraction = (selectedInteraction == 0) ? interactionOptions.Length - 1 : selectedInteraction - 1;
-        else if (key.Key == ConsoleKey.DownArrow)
-            selectedInteraction = (selectedInteraction == interactionOptions.Length - 1) ? 0 : selectedInteraction + 1;
-        else if (key.Key == ConsoleKey.Enter)
-        {
-            if (selectedInteraction == interactionOptions.Length - 1)
-                break;
-
-            switch (selectedInteraction)
-            {
-                case 0:
-                    interakciok.Etet();
-                    break;
-                case 1:
-                    interakciok.Simogat();
-                    break;
-                case 2:
-                    interakciok.Setal();
-                    break;
-                case 3:
-                    interakciok.Jatek();
-                    break;
-                case 4:
-                    interakciok.Gyogyitas();
-                    break;
-            }
-
-            Console.WriteLine("Nyomj meg egy gombot a folytatáshoz.");
-            Console.ReadKey();
-        }
-    }
-}
-
-// Menük megjelenítése középre igazítva
-static void DisplayMenu(string title, string[] options, int selectedOption)
-{
-    Console.ForegroundColor = ConsoleColor.Green;
-    Console.WriteLine(CenterText(title));
-    Console.ResetColor();
-
-    int verticalPadding = (Console.WindowHeight - options.Length) / 2;
-
-    for (int i = 0; i < verticalPadding; i++)
-        Console.WriteLine();  // Függőleges margó
-
-    for (int i = 0; i < options.Length; i++)
-    {
-        Console.SetCursorPosition(0, Console.CursorTop);
-        string formattedOption = (i == selectedOption) ? $"> {options[i]} <" : $"  {options[i]}  ";
-        Console.ForegroundColor = (i == selectedOption) ? ConsoleColor.Red : ConsoleColor.White;
-        Console.WriteLine(CenterText(formattedOption));
-    }
-    Console.ResetColor();
-}
-
-// Szöveg középre igazítása
-static string CenterText(string text)
-{
-    int windowWidth = Console.WindowWidth;
-    int padding = (windowWidth - text.Length) / 2;
-    return new string(' ', Math.Max(padding, 0)) + text;
-}
+AsciiAnimation.RunAnimation(animationName);
 
 
+//// Program elindítása, kezdő GameManager példányosítása
+//GameManager gameManager = new GameManager();
+//gameManager.LoadPet();
 
-//string menuPrompt = @"
+//// `MainMenu` és `ShopMenu` példányosítása `GameManager` paraméterrel
+//MainMenu mainMenu = new MainMenu(gameManager);
+//ShopMenu shopMenu = new ShopMenu(gameManager);
 
+//// Időmúlás és interakciók inicializálása
+//IdoMulas idoMulas = new IdoMulas(gameManager.CurrentPet);
+//Interakciok interakciok = new Interakciok(gameManager.CurrentPet);
 
-//  _______         __  __            _____   ____  _______  _____  _    _  _____ 
-// |__   __| /\    |  \/  |    /\    / ____| / __ \|__   __|/ ____|| |  | ||_   _|
-//    | |   /  \   | \  / |   /  \  | |  __ | |  | |  | |  | |     | |__| |  | |  
-//    | |  / /\ \  | |\/| |  / /\ \ | | |_ || |  | |  | |  | |     |  __  |  | |  
-//    | | / ____ \ | |  | | / ____ \| |__| || |__| |  | |  | |____ | |  | | _| |_ 
-//    |_|/_/    \_\|_|  |_|/_/    \_\\_____| \____/   |_|   \_____||_|  |_||_____|
+//DisplayPromptOnce(gameManager.Prompt);
 
+//// Segédfüggvény a menuPrompt egyszeri megjelenítéséhez
+//static void DisplayPromptOnce(string prompt)
+//{
+//    Console.Clear(); // Konzol törlése az induláskor
+//    foreach (var line in prompt.Split('\n'))
+//    {
+//        Console.WriteLine(CenterText(line)); // Középre igazított menuPrompt kiírása
+//    }
+//}
 
-//";
-
-//// Kiírjuk a promptot egyszer
-//DisplayPromptOnce(menuPrompt);
+//bool exit = false;
+//int selectedOption = 0;
+//string[] options = { "Játék", "Bolt", "Kisállat állapota", "Interakciók", "Kilépés" };
 
 //while (!exit)
 //{
@@ -201,62 +65,25 @@ static string CenterText(string text)
 //    {
 //        switch (selectedOption)
 //        {
-//            case 0: // Játék mód
+//            case 0:  // "Játék"
 //                JatekmenetView gameView = new JatekmenetView(gameManager.CurrentPet);
-//                gameView.Show();
+//                gameView.MainFuttatasa();  // `Show` helyett `MainFuttatasa()`
 //                break;
-//            case 1: // Minijátékok
+//            case 1:  // "Bolt"
 //                ClearMenuArea();
-//                mainMenu.Display();
+//                shopMenu.Display();  // Bolt megjelenítése
 //                break;
-//            case 2: // Bolt
-//                ClearMenuArea();
-//                shopMenu.Display();
-//                break;
-//            case 3: // Kisállat állapota
+//            case 2:  // "Kisállat állapota"
 //                ClearMenuArea();
 //                DisplayPetStatus(gameManager);
 //                break;
-//            case 4: // Kilépés
-//                gameManager.SavePet();
+//            case 3:  // "Interakciók"
+//                DisplayInteractions(interakciok);
+//                break;
+//            case 4:  // "Kilépés"
 //                exit = true;
 //                break;
 //        }
-//    }
-//}
-
-//// Segédfüggvény a menuPrompt egyszeri megjelenítéséhez
-//static void DisplayPromptOnce(string prompt)
-//{
-//    Console.Clear(); // Konzol törlése az induláskor
-//    foreach (var line in prompt.Split('\n'))
-//    {
-//        Console.WriteLine(CenterText(line)); // Középre igazított menuPrompt kiírása
-//    }
-//}
-
-//// Menüpontok megjelenítése
-//static void DisplayMenu(int selectedOption, string[] options)
-//{
-//    int verticalPaddingMenu = (Console.WindowHeight - options.Length) / 2;
-
-//    for (int i = 0; i < options.Length; i++)
-//    {
-//        Console.SetCursorPosition(0, verticalPaddingMenu + i);
-
-//        if (i == selectedOption)
-//        {
-//            Console.ForegroundColor = ConsoleColor.Red; // Kiemelt menüpont színe
-//        }
-//        else
-//        {
-//            Console.ForegroundColor = ConsoleColor.White; // A többi menüpont normál színnel
-//        }
-
-//        string centeredOption = CenterText(options[i]); // Középre igazítjuk a menüpontot
-//        Console.WriteLine(centeredOption.PadRight(Console.WindowWidth)); // Kiíratjuk a középre illesztett menüpontot
-
-//        Console.ResetColor();  // Szín visszaállítása
 //    }
 //}
 
@@ -286,11 +113,80 @@ static string CenterText(string text)
 //    return new string(' ', Math.Max(padding, 0)) + text; // A szükséges szóközökkel hozzáfűzzük a szöveget
 //}
 
+//// Menüpontok megjelenítése
+//static void DisplayMenu(int selectedOption, string[] options)
+//{
+//    int verticalPaddingMenu = (Console.WindowHeight - options.Length) / 2;
 
+//    for (int i = 0; i < options.Length; i++)
+//    {
+//        Console.SetCursorPosition(0, verticalPaddingMenu + i);
 
-//Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+//        if (i == selectedOption)
+//        {
+//            Console.ForegroundColor = ConsoleColor.Red; // Kiemelt menüpont színe
+//        }
+//        else
+//        {
+//            Console.ForegroundColor = ConsoleColor.White; // A többi menüpont normál színnel
+//        }
 
-//Console.WriteLine("Melyik animációt szeretnéd futtatni?:");
-//string animationName = Console.ReadLine() ?? "Idle";
+//        string centeredOption = CenterText(options[i]); // Középre igazítjuk a menüpontot
+//        Console.WriteLine(centeredOption.PadRight(Console.WindowWidth)); // Kiíratjuk a középre illesztett menüpontot
 
-//AsciiAnimation.RunAnimation(animationName);
+//        Console.ResetColor();  // Szín visszaállítása
+//    }
+//}
+
+//// Időmúlás leállítása a program kilépésekor
+//idoMulas.Stop();
+
+//MenuUtils.ResetPrompt();
+//MenuUtils.DisplayPromptOnce(gameManager.Prompt);
+
+//// Interakciók menü megjelenítése
+//static void DisplayInteractions(Interakciok interakciok)
+//{
+//    Console.Clear();
+//    string[] interactionOptions = { "Etetés", "Simogatás", "Séta", "Játék", "Gyógyítás", "Vissza" };
+//    int selectedInteraction = 0;
+
+//    while (true)
+//    {
+//        Console.Clear();
+//        DisplayMenu(selectedInteraction, interactionOptions);
+
+//        var key = Console.ReadKey(true);
+//        if (key.Key == ConsoleKey.UpArrow)
+//            selectedInteraction = (selectedInteraction == 0) ? interactionOptions.Length - 1 : selectedInteraction - 1;
+//        else if (key.Key == ConsoleKey.DownArrow)
+//            selectedInteraction = (selectedInteraction == interactionOptions.Length - 1) ? 0 : selectedInteraction + 1;
+//        else if (key.Key == ConsoleKey.Enter)
+//        {
+//            if (selectedInteraction == interactionOptions.Length - 1)
+//                break;
+
+//            switch (selectedInteraction)
+//            {
+//                case 0:
+//                    interakciok.Etet();
+//                    break;
+//                case 1:
+//                    interakciok.Simogat();
+//                    break;
+//                case 2:
+//                    interakciok.Setal();
+//                    break;
+//                case 3:
+//                    interakciok.Jatek();
+//                    break;
+//                case 4:
+//                    interakciok.Gyogyitas();
+//                    break;
+//            }
+
+//            Console.WriteLine("Nyomj meg egy gombot a folytatáshoz.");
+//            Console.ReadKey();
+//        }
+//    }
+//}

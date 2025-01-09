@@ -12,7 +12,7 @@ namespace TamagotchiLib.Menu
 
         public static void DisplayPromptOnce(string prompt)
         {
-            Console.Clear(); // Töröljük a konzolt
+            Console.Clear();
             foreach (var line in prompt.Split('\n'))
             {
                 Console.WriteLine(CenterText(line)); // Középre igazított sorokat írunk ki

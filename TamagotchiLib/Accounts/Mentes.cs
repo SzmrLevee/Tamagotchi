@@ -28,7 +28,7 @@ namespace TamagotchiLib.Accounts
             if (!File.Exists(FilePath))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
-                File.WriteAllText(FilePath, "Nev;Jelszo;Pisztoly;Ak;Kotszer;Koktel;Joint;Hp;LetrehozasIdeje\n");
+                File.WriteAllText(FilePath, "Nev;Jelszo;Kor;Elet;Ehseg;Faradtsag;Hangulat;Penz;Etel;Ital;Gyogyszer;Csemege;TaplaloEtel;EJI;MEdesseg;SpecGyogyszer;Cukorka;GyogyFu;MegaEtel;Tipus;LetrehozasIdeje\n");
             }
 
             // Beállítjuk a valasztottFiokNev változót az első fiók nevére, ha van
@@ -186,7 +186,7 @@ namespace TamagotchiLib.Accounts
                 using (StreamWriter sw = new StreamWriter(FilePath, true))
                 {
                     string currentTime = DateTime.Now.ToString("yyyy. MM. dd. HH:mm:ss"); // Aktuális idő formázása
-                    sw.WriteLine($"{nev};{jelszo};0;0;0;0;0;100;{currentTime}"); // Fiók hozzáadása a létrehozási idővel, alapértelmezett Hp: 100
+                    sw.WriteLine($"{nev};{jelszo};0;100;0;0;100;0;0;0;0;0;0;0;0;0;0;0;0;0;{currentTime}"); // Fiók hozzáadása a létrehozási idővel, alapértelmezett Hp: 100
                 }
                 Console.WriteLine("Az új fiók sikeresen létrehozva:");
                 valasztottFiokNev = nev; // Az újonnan létrehozott fiók lesz a választott
@@ -391,7 +391,7 @@ namespace TamagotchiLib.Accounts
 
                 if (valasz == "i")
                 {
-                    File.WriteAllLines(FilePath, new[] { "Nev;Jelszo;Pisztoly;Ak;Kotszer;Koktel;Joint;Hp;LetrehozasIdeje" });
+                    File.WriteAllLines(FilePath, new[] { "Nev;Jelszo;Kor;Elet;Ehseg;Faradtsag;Hangulat;Penz;Etel;Ital;Gyogyszer;Csemege;TaplaloEtel;EJI;MEdesseg;SpecGyogyszer;Cukorka;GyogyFu;MegaEtel;Tipus;LetrehozasIdeje"});
                     valasztottFiokNev = null;
                     Console.WriteLine("Minden fiók sikeresen törölve.");
                 }

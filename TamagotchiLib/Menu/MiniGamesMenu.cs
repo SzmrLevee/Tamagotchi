@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TamagotchiLib.MiniGames;
+using TamagotchiLib.Utils;
 
 namespace TamagotchiLib.Menu
 {

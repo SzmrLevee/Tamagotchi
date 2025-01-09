@@ -11,7 +11,7 @@ namespace TamagotchiLib.Animations
     {
         public static void RunAnimation(string animationName, int delayMilliseconds = 50)
         {
-            string imagePath = @$"C:\Users\Levente\Desktop\Tamagotchi\TamagotchiLib\Animations\{animationName}.png";
+            string imagePath = @$"C:\Users\Levente\Desktop\Tamagotchi-main\TamagotchiLib\Animations\{animationName}.png";
             if (!File.Exists(imagePath))
             {
                 Console.WriteLine($"Hiba: Nem található a(z) {imagePath} fájl.");
