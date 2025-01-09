@@ -7,6 +7,7 @@ using static System.Console;
 using TamagotchiLib.Menu;
 using TamagotchiLib.Jatekmenet;
 using TamagotchiLib.Models;
+using TamagotchiLib.Utils;
 
 
 namespace TamagotchiLib.Accounts
@@ -14,25 +15,18 @@ namespace TamagotchiLib.Accounts
     public class Mentes
     {
         public static string valasztottFiokNev { get; set; } // A választott fiók neve
-
-        private static readonly string FilePath;
-
         static Mentes()
         {
-            // Dinamikusan meghatározzuk a projekt gyökérkönyvtárát
-            var currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            var projectDirectory = Directory.GetParent(currentDirectory).Parent.Parent.Parent.Parent.FullName;
-            FilePath = Path.Combine(projectDirectory, "settings.txt");
-
+            FiokKezeles fiokKezeles = new FiokKezeles();
             // Ellenőrizzük, hogy a fájl létezik-e
-            if (!File.Exists(FilePath))
+            if (!File.Exists(fiokKezeles.GetSettingsPath()))
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
-                File.WriteAllText(FilePath, "Nev;Jelszo;Kor;Elet;Ehseg;Faradtsag;Hangulat;Penz;Etel;Ital;Gyogyszer;Csemege;TaplaloEtel;EJI;MEdesseg;SpecGyogyszer;Cukorka;GyogyFu;MegaEtel;Tipus;LetrehozasIdeje\n");
+                Directory.CreateDirectory(Path.GetDirectoryName(fiokKezeles.GetSettingsPath()));
+                File.WriteAllText(fiokKezeles.GetSettingsPath(), "Nev;Jelszo;Kor;Elet;Ehseg;Faradtsag;Hangulat;Penz;Etel;Ital;Gyogyszer;Csemege;TaplaloEtel;EJI;MEdesseg;SpecGyogyszer;Cukorka;GyogyFu;MegaEtel;Tipus;LetrehozasIdeje\n");
             }
 
             // Beállítjuk a valasztottFiokNev változót az első fiók nevére, ha van
-            string[] fiokok = File.ReadAllLines(FilePath);
+            string[] fiokok = File.ReadAllLines(fiokKezeles.GetSettingsPath());
             if (fiokok.Length > 1)
             {
                 valasztottFiokNev = fiokok[1].Split(';')[0];
@@ -44,7 +38,12 @@ namespace TamagotchiLib.Accounts
             while (true)
             {
                 Console.Clear();
-                string prompt = "Fiókkezelés\n";
+                // Kiválasztott fiók neve vagy "Nincs"
+                string fiokInfo = string.IsNullOrEmpty(valasztottFiokNev) ? "Kiválasztott fiók: Nincs\n" : $"Kiválasztott fiók: {valasztottFiokNev}\n";
+
+                // Prompt létrehozása
+                string prompt = $"Fiókkezelés\n{fiokInfo}";
+
                 string[] opciok = { "Új fiók", "Fiókjaim", "Fiók törlése", "Összes fiók törlése", "Vissza a főmenübe" };
 
                 // Használjuk a teljes namespace-et az ütközés elkerülése érdekében
@@ -66,17 +65,21 @@ namespace TamagotchiLib.Accounts
                     case 3:
                         AdminJelszoBelekerese();
                         break;
-                    case 4:
-                        if (!string.IsNullOrEmpty(valasztottFiokNev))
+                    case 4: // "Vissza a főmenübe"
+                        if (string.IsNullOrEmpty(valasztottFiokNev) || FiokokSzama() == 0)
                         {
-                            jatekmenetView.MainFuttatasa();
+                            Console.WriteLine("Legalább egy fiók létrehozása és bejelentkezés szükséges a főmenübe való belépéshez.");
+                            Console.WriteLine("Nyomj meg egy gombot a folytatáshoz.");
+                            Console.ReadKey();
                         }
                         else
                         {
-                            Console.WriteLine("Legalább egy fiók létrehozása szükséges.");
-                            Console.ReadKey();
+                            GameManager gameManager = new GameManager();
+                            gameManager.LoadPet();  // Fiókhoz tartozó kisállat betöltése
+                            gameManager.JatekMenu(); // Belépés a főmenübe
                         }
                         break;
+
                 }
             }
         }
@@ -100,9 +103,10 @@ namespace TamagotchiLib.Accounts
 
         private int FiokokSzama()
         {
-            if (File.Exists(FilePath))
+            FiokKezeles fiokKezeles = new FiokKezeles();
+            if (File.Exists(fiokKezeles.GetSettingsPath()))
             {
-                string[] fiokok = File.ReadAllLines(FilePath);
+                string[] fiokok = File.ReadAllLines(fiokKezeles.GetSettingsPath());
                 return fiokok.Length - 1; // Kivonjuk az 1-et, hogy ne számoljuk bele a fejlécet
             }
             return 0;
@@ -141,6 +145,7 @@ namespace TamagotchiLib.Accounts
 
         private void UjFiok()
         {
+            FiokKezeles fiokKezeles = new FiokKezeles();
             Console.Clear();
             string nev = "";
             string jelszo = "";
@@ -181,12 +186,47 @@ namespace TamagotchiLib.Accounts
                 }
             }
 
+            int selected = -1;
+            string[] options = { "Garfield (narancs)", "Szörmók (szürke)", "Hulk (zöld)" };
+            // Addig kérjük be a típus választást, amíg érvényes számot nem ad meg
+            while (selected < 0 || selected >= options.Length)
+            {
+                Console.Clear();
+
+                Console.WriteLine("Válaszd ki a macskád típusát:");
+                for (int i = 0; i < options.Length; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {options[i]}");
+                }
+
+                Console.Write("Válaszd ki a macskád típusának számát (1-3): ");
+                string input = Console.ReadLine();
+
+                if (int.TryParse(input, out int parsedInput) && parsedInput >= 1 && parsedInput <= options.Length)
+                {
+                    selected = parsedInput - 1;
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Érvénytelen választás! Próbáld újra.");
+                }
+            }
+
+            string selectedColor = selected switch
+            {
+                0 => "Narancs",
+                1 => "Szürke",
+                2 => "Zöld",
+                _ => throw new InvalidOperationException("Érvénytelen választás történt."),
+            };
+
             try
             {
-                using (StreamWriter sw = new StreamWriter(FilePath, true))
+                using (StreamWriter sw = new StreamWriter(fiokKezeles.GetSettingsPath(), true))
                 {
                     string currentTime = DateTime.Now.ToString("yyyy. MM. dd. HH:mm:ss"); // Aktuális idő formázása
-                    sw.WriteLine($"{nev};{jelszo};0;100;0;0;100;0;0;0;0;0;0;0;0;0;0;0;0;0;{currentTime}"); // Fiók hozzáadása a létrehozási idővel, alapértelmezett Hp: 100
+                    sw.WriteLine($"{nev};{jelszo};0;100;0;0;100;0;0;0;0;0;0;0;0;0;0;0;0;{selectedColor};{currentTime}"); // Fiók hozzáadása a létrehozási idővel, alapértelmezett Hp: 100
                 }
                 Console.WriteLine("Az új fiók sikeresen létrehozva:");
                 valasztottFiokNev = nev; // Az újonnan létrehozott fiók lesz a választott
@@ -205,9 +245,10 @@ namespace TamagotchiLib.Accounts
 
         private bool FiokNevLetezik(string nev)
         {
-            if (File.Exists(FilePath))
+            FiokKezeles fiokKezeles = new FiokKezeles();
+            if (File.Exists(fiokKezeles.GetSettingsPath()))
             {
-                string[] fiokok = File.ReadAllLines(FilePath);
+                string[] fiokok = File.ReadAllLines(fiokKezeles.GetSettingsPath());
                 for (int i = 1; i < fiokok.Length; i++) // Kezdjük az 1-es indexnél, hogy kihagyjuk a fejlécet
                 {
                     string fiokNev = fiokok[i].Split(';')[0];
@@ -223,7 +264,8 @@ namespace TamagotchiLib.Accounts
         private void Fiokjaim()
         {
             Console.Clear();
-            string[] fiokok = File.ReadAllLines(FilePath);
+            FiokKezeles fiokKezeles = new FiokKezeles();
+            string[] fiokok = File.ReadAllLines(fiokKezeles.GetSettingsPath());
             if (fiokok.Length <= 1)
             {
                 Console.WriteLine("Nincsenek fiókok.");
@@ -291,7 +333,8 @@ namespace TamagotchiLib.Accounts
         private void FiokTorles()
         {
             Console.Clear();
-            string[] fiokok = File.ReadAllLines(FilePath);
+            FiokKezeles fiokKezeles = new FiokKezeles();
+            string[] fiokok = File.ReadAllLines(fiokKezeles.GetSettingsPath());
             if (fiokok.Length <= 1)
             {
                 Console.WriteLine("Nincsenek fiókok a törléshez.");
@@ -353,7 +396,7 @@ namespace TamagotchiLib.Accounts
 
                     try
                     {
-                        File.WriteAllLines(FilePath, fiokLista);
+                        File.WriteAllLines(fiokKezeles.GetSettingsPath(), fiokLista);
                         valasztottFiokNev = null;
                         Console.WriteLine("A fiók sikeresen törölve.");
                     }
@@ -384,6 +427,7 @@ namespace TamagotchiLib.Accounts
         private void OsszesFiokTorles()
         {
             Console.Clear();
+            FiokKezeles fiokKezeles = new FiokKezeles();
             try
             {
                 Console.WriteLine("Biztosan törölni szeretnéd az összes fiókot? (i/n)");
@@ -391,7 +435,7 @@ namespace TamagotchiLib.Accounts
 
                 if (valasz == "i")
                 {
-                    File.WriteAllLines(FilePath, new[] { "Nev;Jelszo;Kor;Elet;Ehseg;Faradtsag;Hangulat;Penz;Etel;Ital;Gyogyszer;Csemege;TaplaloEtel;EJI;MEdesseg;SpecGyogyszer;Cukorka;GyogyFu;MegaEtel;Tipus;LetrehozasIdeje"});
+                    File.WriteAllLines(fiokKezeles.GetSettingsPath(), new[] { "Nev;Jelszo;Kor;Elet;Ehseg;Faradtsag;Hangulat;Penz;Etel;Ital;Gyogyszer;Csemege;TaplaloEtel;EJI;MEdesseg;SpecGyogyszer;Cukorka;GyogyFu;MegaEtel;Tipus;LetrehozasIdeje"});
                     valasztottFiokNev = null;
                     Console.WriteLine("Minden fiók sikeresen törölve.");
                 }

@@ -73,5 +73,12 @@ namespace TamagotchiLib.Utils
                 Console.WriteLine($"{_pet.Name} teljesen egészséges, nincs szükség kezelésre.");
             }
         }
+
+        public Pet CurrentPet { get; private set; }
+
+        public void DisplayStatus()
+        {
+            Console.WriteLine(CurrentPet.ToString());
+        }
     }
 }

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TamagotchiLib.Accounts;
 
 namespace TamagotchiLib.Animations
 {
@@ -11,14 +12,14 @@ namespace TamagotchiLib.Animations
     {
         public static void RunAnimation(string animationName, int delayMilliseconds = 50)
         {
-            string imagePath = @$"C:\Users\Levente\Desktop\Tamagotchi-main\TamagotchiLib\Animations\{animationName}.png";
-            if (!File.Exists(imagePath))
+            FiokKezeles fiokKezeles = new FiokKezeles();
+            if (!File.Exists(fiokKezeles.GetAnimationsPath(animationName)))
             {
-                Console.WriteLine($"Hiba: Nem található a(z) {imagePath} fájl.");
+                Console.WriteLine($"Hiba: Nem található a(z) {fiokKezeles.GetAnimationsPath(animationName)} fájl.");
                 return;
             }
 
-            using Bitmap spriteSheet = new Bitmap(imagePath);
+            using Bitmap spriteSheet = new Bitmap(fiokKezeles.GetAnimationsPath(animationName));
             int frameHeight = spriteSheet.Height;
             int numberOfFrames = spriteSheet.Width / frameHeight;  // Képkockaszám automatikus kiszámítása
             int frameWidth = spriteSheet.Width / numberOfFrames;

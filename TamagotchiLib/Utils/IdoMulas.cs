@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Timers; // Explicit használat a Timer osztályra
+using System.Timers;
 using TamagotchiLib.Models;
 
 namespace TamagotchiLib.Utils
@@ -42,8 +42,6 @@ namespace TamagotchiLib.Utils
             {
                 _pet.Health = Math.Max(0, _pet.Health - 10);
             }
-
-            Console.WriteLine(_pet.ToString());
         }
 
         public void Stop()

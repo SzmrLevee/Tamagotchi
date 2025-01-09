@@ -8,23 +8,36 @@ namespace TamagotchiLib.Accounts
 {
     public class FiokKezeles
     {
-        public static readonly string FilePath;
+        public readonly string currentDirectory;
+        public readonly string projectDirectory;
 
-        static FiokKezeles()
+        public FiokKezeles()
         {
-            var currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            var projectDirectory = Directory.GetParent(currentDirectory).Parent.Parent.Parent.Parent.FullName;
-            FilePath = Path.Combine(projectDirectory, "settings.txt");
+            currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            projectDirectory = Directory.GetParent(currentDirectory)?.Parent?.Parent?.Parent?.Parent?.FullName ?? string.Empty;
         }
+
+        public string GetSettingsPath()
+        {
+            return Path.Combine(projectDirectory, "settings.txt");
+        }
+
+        public string GetAnimationsPath(string fileName)
+        {
+            // Az Animations mappához vezető teljes út
+            string animationsPath = Path.Combine(projectDirectory, "TamagotchiLib", "Animations", $"{fileName}.png");
+            return animationsPath;
+        }
+
 
         private string[] GetFiokSorok()
         {
-            return File.ReadAllLines(FilePath);
+            return File.ReadAllLines(GetSettingsPath());
         }
 
         private void UpdateFiokSorok(string[] fiokSorok)
         {
-            File.WriteAllLines(FilePath, fiokSorok);
+            File.WriteAllLines(GetSettingsPath(), fiokSorok);
         }
 
         private int GetFiokIndex(string nev)
@@ -66,6 +79,5 @@ namespace TamagotchiLib.Accounts
             string[] items = { "Pisztoly", "Ak", "Kotszer", "Koktel", "Joint", "Hp" };
             return Array.IndexOf(items, itemName);
         }
-
     }
 }
