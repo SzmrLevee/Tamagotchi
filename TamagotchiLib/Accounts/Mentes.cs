@@ -560,22 +560,5 @@ namespace TamagotchiLib.Accounts
             return inventoryList.ToArray();
         }
 
-        public void ShowInventory(Mentes mentes)
-        {
-            Console.Clear();
-            Console.WriteLine("=== Inventory ===\n");
-
-            // Inventory lekérése
-            string[] inventoryItems = mentes.GetInventory(Mentes.valasztottFiokNev);
-
-            foreach (var item in inventoryItems)
-            {
-                Console.WriteLine(item);
-            }
-
-            Console.WriteLine("\nNyomj egy gombot a visszalépéshez.");
-            Console.ReadKey();
-        }
-
     }
 }

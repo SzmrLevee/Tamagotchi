@@ -82,6 +82,7 @@ namespace TamagotchiLib.Utils
                         case 2:  // "Inventory"
                             Console.Clear();
                             DisplayInventory(); // Inventory megjelenítés metódus
+                            Console.Clear();
                             break;
                         case 3:  // "Kisállat állapota"
                             Console.Clear();

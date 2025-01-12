@@ -49,6 +49,7 @@ namespace TamagotchiLib.Menu
         "8. Speciális gyógyszer (300 pénz)",
         "9. Játékos cukorka (80 pénz)",
         "10. Gyógyító fű (170 pénz)",
+        "11. Mega étel (500 pénz)",
         "11. Kilépés a főmenübe" // Kilépési opció
     };
 
@@ -142,7 +143,7 @@ namespace TamagotchiLib.Menu
                     itemPrice = 250;
                     break;
                 case 7:
-                    itemName = "SpeciálisGyógyszer";
+                    itemName = "SpecGyógyszer";
                     itemPrice = 300;
                     break;
                 case 8:
