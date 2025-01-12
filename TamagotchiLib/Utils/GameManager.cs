@@ -211,16 +211,16 @@ namespace TamagotchiLib.Utils
             }
         }
 
-        static void DisplayPetStatus(GameManager gameManager)
-        {
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("\n=== Kisállat Státusz ===\n");
-            Console.ResetColor();
-            gameManager.DisplayStatus();
-            Console.WriteLine("\nNyomj egy gombot a folytatáshoz.");
-            Console.ReadKey();
-        }
+        //static void DisplayPetStatus(GameManager gameManager)
+        //{
+        //    Console.Clear();
+        //    Console.ForegroundColor = ConsoleColor.Blue;
+        //    Console.WriteLine("\n=== Kisállat Státusz ===\n");
+        //    Console.ResetColor();
+        //    gameManager.DisplayStatus();
+        //    Console.WriteLine("\nNyomj egy gombot a folytatáshoz.");
+        //    Console.ReadKey();
+        //}
 
         public void DisplayStatus()
         {

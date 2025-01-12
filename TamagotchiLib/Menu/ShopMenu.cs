@@ -105,30 +105,6 @@ namespace TamagotchiLib.Menu
             Console.Clear(); // Bolt menüből kilépve töröljük a képernyőt
         }
 
-
-
-
-        private void DisplayShopMenu(int selectedOption)
-        {
-            Console.SetCursorPosition(0, 2);  // A menüpontokat közvetlenül a bolt neve alá rajzoljuk
-            for (int i = 0; i < shopItems.Length; i++)
-            {
-                if (i == selectedOption)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
-
-                string centeredOption = CenterText(shopItems[i]); // Középre igazítjuk a menüpontot
-                Console.WriteLine(centeredOption);        
-
-                Console.ResetColor();
-            }
-        }
-
         // Vásárlás végrehajtása
         private void ExecutePurchase(int selectedOption)
         {
@@ -138,7 +114,7 @@ namespace TamagotchiLib.Menu
             switch (selectedOption)
             {
                 case 0:
-                    itemName = "Etel";
+                    itemName = "Étel";
                     itemPrice = 100;
                     break;
                 case 1:
@@ -146,7 +122,7 @@ namespace TamagotchiLib.Menu
                     itemPrice = 50;
                     break;
                 case 2:
-                    itemName = "Gyogyszer";
+                    itemName = "Gyógyszer";
                     itemPrice = 150;
                     break;
                 case 3:
@@ -154,31 +130,31 @@ namespace TamagotchiLib.Menu
                     itemPrice = 120;
                     break;
                 case 4:
-                    itemName = "TaplaloEtel";
+                    itemName = "TáplalóÉtel";
                     itemPrice = 200;
                     break;
                 case 5:
-                    itemName = "EgeszsegJavitoItal";
+                    itemName = "EgészségJavítóItal";
                     itemPrice = 90;
                     break;
                 case 6:
-                    itemName = "MagikusEdesseg";
+                    itemName = "MágikusÉdesség";
                     itemPrice = 250;
                     break;
                 case 7:
-                    itemName = "SpecGyogyszer";
+                    itemName = "SpeciálisGyógyszer";
                     itemPrice = 300;
                     break;
                 case 8:
-                    itemName = "JatekosCukorka";
+                    itemName = "JátékosCukorka";
                     itemPrice = 80;
                     break;
                 case 9:
-                    itemName = "GyogyFu";
+                    itemName = "GyógyFű";
                     itemPrice = 170;
                     break;
                 case 10:
-                    itemName = "MegaEtel";
+                    itemName = "MegaÉtel";
                     itemPrice = 500;
                     break;
                 default:
@@ -205,14 +181,5 @@ namespace TamagotchiLib.Menu
             Console.ReadKey(); // Várakozás a folytatáshoz
         }
 
-
-
-        // Középre igazító segédfüggvény
-        static string CenterText(string text)
-        {
-            int windowWidth = Console.WindowWidth;
-            int padding = (windowWidth - text.Length) / 2; // Kiszámoljuk a szükséges szóközöket
-            return new string(' ', padding) + text; // A szükséges szóközökkel hozzáfűzzük a szöveget
-        }
     }
 }
