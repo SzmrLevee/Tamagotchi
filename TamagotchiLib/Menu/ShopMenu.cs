@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TamagotchiLib.Accounts;
 using TamagotchiLib.Utils;
 
 namespace TamagotchiLib.Menu
@@ -32,36 +33,80 @@ namespace TamagotchiLib.Menu
 
         public void Display()
         {
-            bool exitShop = false;
+            bool exitShop = false; // Kontrollváltozó a bolt elhagyásához
             int selectedOption = 0;
 
-            string prompt = "=== Bolt ===";
-            Console.Clear();
-            Console.WriteLine(CenterText(prompt));
-
-            DisplayShopMenu(selectedOption);
+            // Bolt menü opciók, beleértve a kilépést
+            string[] shopItems =
+            {
+        "1. Étel (100 pénz)",
+        "2. Ital (50 pénz)",
+        "3. Gyógyszer (150 pénz)",
+        "4. Csemege (120 pénz)",
+        "5. Tápláló étel (200 pénz)",
+        "6. Egészség javító ital (90 pénz)",
+        "7. Mágikus édesség (250 pénz)",
+        "8. Speciális gyógyszer (300 pénz)",
+        "9. Játékos cukorka (80 pénz)",
+        "10. Gyógyító fű (170 pénz)",
+        "11. Kilépés a főmenübe" // Kilépési opció
+    };
 
             while (!exitShop)
             {
+                Console.Clear(); // Tisztítjuk a képernyőt a bolt újrarenderelése előtt
+                Console.WriteLine("=== Bolt ===");
+                Console.WriteLine();
+
+                // Bolt menüpontok megjelenítése
+                for (int i = 0; i < shopItems.Length; i++)
+                {
+                    if (i == selectedOption)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red; // Aktív opció kiemelése
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+
+                    Console.WriteLine(shopItems[i]);
+                }
+                Console.ResetColor();
+
+                // Felhasználói bemenet
                 var key = Console.ReadKey(true);
 
-                if (key.Key == ConsoleKey.UpArrow)
+                if (key.Key == ConsoleKey.UpArrow) // Fel
                 {
                     selectedOption = (selectedOption == 0) ? shopItems.Length - 1 : selectedOption - 1;
-                    DisplayShopMenu(selectedOption);
                 }
-                else if (key.Key == ConsoleKey.DownArrow)
+                else if (key.Key == ConsoleKey.DownArrow) // Le
                 {
                     selectedOption = (selectedOption == shopItems.Length - 1) ? 0 : selectedOption + 1;
-                    DisplayShopMenu(selectedOption);
                 }
-                else if (key.Key == ConsoleKey.Enter)
+                else if (key.Key == ConsoleKey.Enter) // Kiválasztás
                 {
-                    ExecutePurchase(selectedOption);
-                    exitShop = true;
+                    if (selectedOption == shopItems.Length - 1) // Kilépés opció
+                    {
+                        exitShop = true; // Bolt elhagyása
+                    }
+                    else
+                    {
+                        ExecutePurchase(selectedOption); // Vásárlás végrehajtása
+                    }
+                }
+                else if (key.Key == ConsoleKey.Escape) // ESC kilépés
+                {
+                    exitShop = true; // Bolt elhagyása
                 }
             }
+
+            Console.Clear(); // Bolt menüből kilépve töröljük a képernyőt
         }
+
+
+
 
         private void DisplayShopMenu(int selectedOption)
         {
@@ -93,7 +138,7 @@ namespace TamagotchiLib.Menu
             switch (selectedOption)
             {
                 case 0:
-                    itemName = "Étel";
+                    itemName = "Etel";
                     itemPrice = 100;
                     break;
                 case 1:
@@ -101,7 +146,7 @@ namespace TamagotchiLib.Menu
                     itemPrice = 50;
                     break;
                 case 2:
-                    itemName = "Gyógyszer";
+                    itemName = "Gyogyszer";
                     itemPrice = 150;
                     break;
                 case 3:
@@ -109,42 +154,58 @@ namespace TamagotchiLib.Menu
                     itemPrice = 120;
                     break;
                 case 4:
-                    itemName = "Tápláló étel";
+                    itemName = "TaplaloEtel";
                     itemPrice = 200;
                     break;
                 case 5:
-                    itemName = "Egészség javító ital";
+                    itemName = "EgeszsegJavitoItal";
                     itemPrice = 90;
                     break;
                 case 6:
-                    itemName = "Mágikus édesség";
+                    itemName = "MagikusEdesseg";
                     itemPrice = 250;
                     break;
                 case 7:
-                    itemName = "Speciális gyógyszer";
+                    itemName = "SpecGyogyszer";
                     itemPrice = 300;
                     break;
                 case 8:
-                    itemName = "Játékos cukorka";
+                    itemName = "JatekosCukorka";
                     itemPrice = 80;
                     break;
                 case 9:
-                    itemName = "Gyógyító fű";
+                    itemName = "GyogyFu";
                     itemPrice = 170;
                     break;
                 case 10:
-                    itemName = "Mega étel";
+                    itemName = "MegaEtel";
                     itemPrice = 500;
                     break;
                 default:
-                    break;
+                    Console.WriteLine("Érvénytelen választás!");
+                    return;
             }
 
-            // Vásárlás logikája
-            gameManager.BuyItem(itemName, itemPrice);
+            if (gameManager.PlayerMoney >= itemPrice)
+            {
+                gameManager.PlayerMoney -= itemPrice;
 
-            MenuUtils.DisplayPromptOnce(gameManager.Prompt);
+                // Inventory frissítése fájlban
+                Mentes mentes = new Mentes();
+                mentes.UpdateInventory(Mentes.valasztottFiokNev, itemName, 1);
+
+                Console.WriteLine($"Sikeresen vásároltál egy {itemName}-t {itemPrice} pénzért!");
+            }
+            else
+            {
+                Console.WriteLine("Nincs elég pénzed a vásárláshoz.");
+            }
+
+            Console.WriteLine("\nNyomj egy gombot a folytatáshoz.");
+            Console.ReadKey(); // Várakozás a folytatáshoz
         }
+
+
 
         // Középre igazító segédfüggvény
         static string CenterText(string text)

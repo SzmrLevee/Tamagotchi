@@ -456,5 +456,126 @@ namespace TamagotchiLib.Accounts
             Console.WriteLine("Nyomj meg egy gombot a folytatáshoz.");
             Console.ReadKey();
         }
+
+        public void UpdateInventory(string userName, string itemName, int quantity)
+        {
+            FiokKezeles fiokKezeles = new FiokKezeles();
+            string[] fiokSorok = File.ReadAllLines(fiokKezeles.GetSettingsPath());
+
+            // Megkeressük a felhasználó sorát
+            int fiokIndex = Array.FindIndex(fiokSorok, row => row.StartsWith(userName + ";"));
+            if (fiokIndex == -1)
+            {
+                Console.WriteLine("A megadott fiók nem található.");
+                return;
+            }
+
+            // A sor adatainak feldarabolása
+            string[] adatok = fiokSorok[fiokIndex].Split(';');
+
+            // Inventory elemek indexei
+            Dictionary<string, int> itemIndexes = new Dictionary<string, int>
+    {
+        { "Etel", 8 },
+        { "Ital", 9 },
+        { "Gyogyszer", 10 },
+        { "Csemege", 11 },
+        { "TaplaloEtel", 12 },
+        { "EJI", 13 },
+        { "MEdesseg", 14 },
+        { "SpecGyogyszer", 15 },
+        { "Cukorka", 16 },
+        { "GyogyFu", 17 },
+        { "MegaEtel", 18 }
+    };
+
+            if (!itemIndexes.ContainsKey(itemName))
+            {
+                Console.WriteLine($"Hiba: Ismeretlen tárgy: {itemName}");
+                return;
+            }
+
+            // Az adott tárgy mennyiségének frissítése
+            int itemIndex = itemIndexes[itemName];
+            int currentQuantity = int.Parse(adatok[itemIndex]);
+            adatok[itemIndex] = (currentQuantity + quantity).ToString();
+
+            // A sor visszaállítása és fájl frissítése
+            fiokSorok[fiokIndex] = string.Join(";", adatok);
+            File.WriteAllLines(fiokKezeles.GetSettingsPath(), fiokSorok);
+
+            Console.WriteLine($"{quantity} db {itemName} hozzáadva az inventory-hoz.");
+        }
+
+
+
+        public string[] GetInventory(string userName)
+        {
+            // Fájl elérési út
+            FiokKezeles fiokKezeles = new FiokKezeles();
+            string[] fiokSorok = File.ReadAllLines(fiokKezeles.GetSettingsPath());
+
+            // Megkeressük a felhasználó sorát
+            int fiokIndex = Array.FindIndex(fiokSorok, row => row.StartsWith(userName + ";"));
+            if (fiokIndex == -1)
+            {
+                return new string[] { "Hiba: A felhasználó nem található." };
+            }
+
+            // A sor adatainak feldarabolása
+            string[] adatok = fiokSorok[fiokIndex].Split(';');
+
+            // Inventory elemek indexei
+            Dictionary<string, int> itemIndexes = new Dictionary<string, int>
+    {
+        { "Etel", 8 },
+        { "Ital", 9 },
+        { "Gyogyszer", 10 },
+        { "Csemege", 11 },
+        { "TaplaloEtel", 12 },
+        { "EJI", 13 },
+        { "MEdesseg", 14 },
+        { "SpecGyogyszer", 15 },
+        { "Cukorka", 16 },
+        { "GyogyFu", 17 },
+        { "MegaEtel", 18 }
+    };
+
+            // Inventory tartalom összeállítása
+            List<string> inventoryList = new List<string>();
+            foreach (var item in itemIndexes)
+            {
+                int quantity = int.Parse(adatok[item.Value]);
+                if (quantity > 0) // Csak azokat listázzuk, amelyek mennyisége > 0
+                {
+                    inventoryList.Add($"{item.Key}: {quantity} db");
+                }
+            }
+
+            if (inventoryList.Count == 0)
+            {
+                return new string[] { "Az inventory üres." };
+            }
+
+            return inventoryList.ToArray();
+        }
+
+        public void ShowInventory(Mentes mentes)
+        {
+            Console.Clear();
+            Console.WriteLine("=== Inventory ===\n");
+
+            // Inventory lekérése
+            string[] inventoryItems = mentes.GetInventory(Mentes.valasztottFiokNev);
+
+            foreach (var item in inventoryItems)
+            {
+                Console.WriteLine(item);
+            }
+
+            Console.WriteLine("\nNyomj egy gombot a visszalépéshez.");
+            Console.ReadKey();
+        }
+
     }
 }

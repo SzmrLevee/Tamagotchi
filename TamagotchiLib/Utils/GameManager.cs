@@ -80,7 +80,8 @@ namespace TamagotchiLib.Utils
                             new ShopMenu(this).Display();
                             break;
                         case 2:  // "Inventory"
-                            Console.WriteLine("Itt lesz az inventory");
+                            Console.Clear();
+                            DisplayInventory(); // Inventory megjelenítés metódus
                             break;
                         case 3:  // "Kisállat állapota"
                             Console.Clear();
@@ -126,8 +127,12 @@ namespace TamagotchiLib.Utils
             if (PlayerMoney >= itemPrice)
             {
                 PlayerMoney -= itemPrice;
+
+                // Inventory frissítése fájlban
+                Mentes mentes = new Mentes();
+                mentes.UpdateInventory(Mentes.valasztottFiokNev, itemName, 1);
+
                 Console.WriteLine($"Vásároltál egy {itemName}-t! Kiadott pénz: {itemPrice} Pénz, Maradó: {PlayerMoney}");
-                // További logika hozzáadása, például az adott termék hatása a Tamagotchi-ra
             }
             else
             {
@@ -226,5 +231,31 @@ namespace TamagotchiLib.Utils
         {
             randomInterakciok.RandomInteraction(CurrentPet);  // Véletlenszerű interakció kiváltása
         }
+
+        public void DisplayInventory()
+        {
+            Console.Clear();
+            Console.WriteLine("=== Inventory ===\n");
+
+            Mentes mentes = new Mentes();
+            string[] inventoryItems = mentes.GetInventory(Mentes.valasztottFiokNev);
+
+            if (inventoryItems == null || inventoryItems.Length == 0)
+            {
+                Console.WriteLine("Az inventory üres.");
+            }
+            else
+            {
+                foreach (var item in inventoryItems)
+                {
+                    Console.WriteLine(item);
+                }
+            }
+
+            Console.WriteLine("\nNyomj egy gombot a folytatáshoz.");
+            Console.ReadKey();
+        }
+
+        
     }
 }
