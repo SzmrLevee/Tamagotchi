@@ -16,6 +16,8 @@ namespace TamagotchiLib.Jatekmenet
             this.pet = pet;
         }
 
+
+
         public void ShowInventory()
         {
             Console.Clear();

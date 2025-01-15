@@ -11,20 +11,6 @@ namespace TamagotchiLib.Menu
     public class ShopMenu
     {
         private readonly GameManager gameManager;
-        private readonly string[] shopItems =
-        {
-            "1. Étel (100 pénz)",
-            "2. Ital (50 pénz)",
-            "3. Gyógyszer (150 pénz)",
-            "4. Csemege (120 pénz)",
-            "5. Tápláló étel (200 pénz)",
-            "6. Egészség javító ital (90 pénz)",
-            "7. Mágikus édesség (250 pénz)",
-            "8. Speciális gyógyszer (300 pénz)",
-            "9. Játékos cukorka (80 pénz)",
-            "10. Gyógyító fű (170 pénz)",
-            "11. Mega étel (500 pénz)"
-        };
 
         public ShopMenu(GameManager gameManager)
         {
@@ -50,7 +36,7 @@ namespace TamagotchiLib.Menu
         "9. Játékos cukorka (80 pénz)",
         "10. Gyógyító fű (170 pénz)",
         "11. Mega étel (500 pénz)",
-        "11. Kilépés a főmenübe" // Kilépési opció
+        "12. Kilépés a főmenübe" // Kilépési opció
     };
 
             while (!exitShop)
@@ -115,7 +101,7 @@ namespace TamagotchiLib.Menu
             switch (selectedOption)
             {
                 case 0:
-                    itemName = "Étel";
+                    itemName = "Etel";
                     itemPrice = 100;
                     break;
                 case 1:
@@ -123,7 +109,7 @@ namespace TamagotchiLib.Menu
                     itemPrice = 50;
                     break;
                 case 2:
-                    itemName = "Gyógyszer";
+                    itemName = "Gyogyszer";
                     itemPrice = 150;
                     break;
                 case 3:
@@ -131,31 +117,31 @@ namespace TamagotchiLib.Menu
                     itemPrice = 120;
                     break;
                 case 4:
-                    itemName = "TáplalóÉtel";
+                    itemName = "TaplaloEtel";
                     itemPrice = 200;
                     break;
                 case 5:
-                    itemName = "EgészségJavítóItal";
+                    itemName = "EJI";
                     itemPrice = 90;
                     break;
                 case 6:
-                    itemName = "MágikusÉdesség";
+                    itemName = "MEdesseg";
                     itemPrice = 250;
                     break;
                 case 7:
-                    itemName = "SpecGyógyszer";
+                    itemName = "SpecGyogyszer";
                     itemPrice = 300;
                     break;
                 case 8:
-                    itemName = "JátékosCukorka";
+                    itemName = "Cukorka";
                     itemPrice = 80;
                     break;
                 case 9:
-                    itemName = "GyógyFű";
+                    itemName = "GyogyFu";
                     itemPrice = 170;
                     break;
                 case 10:
-                    itemName = "MegaÉtel";
+                    itemName = "MegaEtel";
                     itemPrice = 500;
                     break;
                 default:

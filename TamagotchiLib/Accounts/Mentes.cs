@@ -508,7 +508,6 @@ namespace TamagotchiLib.Accounts
         }
 
 
-
         public string[] GetInventory(string userName)
         {
             // Fájl elérési út
@@ -559,6 +558,5 @@ namespace TamagotchiLib.Accounts
 
             return inventoryList.ToArray();
         }
-
     }
 }
