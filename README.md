@@ -29,7 +29,7 @@ Ez a Tamagotchi típusú játék egy virtuális kisállat gondozását teszi leh
 - `4`: Vissza a főmenübe
 - `Esc`: Főmenübe lépés bármelyik almenüből.
 
-
+---
 
 ## Fejlesztői Dokumentáció
 
@@ -59,8 +59,31 @@ Ez a Tamagotchi típusú játék egy virtuális kisállat gondozását teszi leh
 - **Fő metódusok:**
   - `AddItem()`: Új tárgy hozzáadása.
 
+#### FiokKezeles
+- **Felelősség:** A fiókok kezeléséért felelős osztály, amely biztosítja a fiókadatok tárolását és módosítását fájlokban.
+- **Fő metódusok:**
+  - `GetSettingsPath()`: Az alapértelmezett beállítások fájlútvonalát adja vissza.
+  - `Novelem()`: Az adott elem mennyiségének növelése egy fiókban.
 
-    
+#### AsciiAnimation
+- **Felelősség:** ASCII animációk megjelenítését biztosítja.
+- **Fő metódusok:**
+  - `RunAnimation()`: Animáció futtatása egy megadott név alapján.
+
+#### IdoMulas
+- **Felelősség:** Rendszeres időközönként frissíti a kisállat állapotát (éhség, fáradtság stb.).
+- **Fő metódusok:**
+  - `FrissitTulajdonsagok()`: Az állapotok időalapú frissítése (éhség, fáradtság növelése, élet csökkentése kritikus szinteken).
+  - `Stop()`: Az időzítő leállítása.
+
+#### Mentes
+- **Felelősség:** A játékállapot mentéséért és betöltéséért felel.
+- **Fő metódusok:**
+  - `UjFiok()`: Új fiók létrehozása.
+  - `Fomenu()`: A főmenü megjelenítése.
+
+---
+
 ## Tesztelési Jegyzőkönyv
 
 ### Tesztelési Célok
@@ -69,20 +92,20 @@ Ez a Tamagotchi típusú játék egy virtuális kisállat gondozását teszi leh
 - A fiókkezelés és az állapotváltozások tesztelése.
 
 ### Tesztelési Esetek
-| Teszt Azonosító | Funkció | Várt Eredmény | Tesztelési Eredmény |
-|------------------|---------|---------------|---------------------|
-| T1              | Főmenü  | Minden menüpont megjelenik és navigálható | Sikeres |
-| T2              | Játék   | Animáció és menü egyidejű frissítése | Sikeres |
-| T3              | Bolt    | Vásárlás során a pénz megfelelően csökken | Sikeres |
-| T4              | Inventory | Az összegyűjtött tárgyak megjelenik | Sikeres |
-| T5              | Fiókkezelés | Új fiók létrehozása és betöltése | Sikeres |
+| Teszt Azonosító | Funkció              | Várt Eredmény                                      | Tesztelési Eredmény |
+|------------------|----------------------|--------------------------------------------------|---------------------|
+| T1              | Főmenü               | Minden menüpont megjelenik és navigálható         | Sikeres             |
+| T2              | Játék                | Animáció és menü egyidejű frissítése              | Sikeres             |
+| T3              | Bolt                 | Vásárlás során a pénz megfelelően csökken         | Sikeres             |
+| T4              | Inventory            | Az összegyűjtött tárgyak megjelennek             | Sikeres             |
+| T5              | Fiókkezelés          | Új fiók létrehozása és betöltése                 | Sikeres             |
 
 ### MSTest Tesztek
 - **PetTests.cs:** Az állapotváltozások ellenőrzése (éhség, fáradtság).
 - **InventoryTests.cs:** Vásárlás és tárgyhasználat.
 - **GameManagerTests.cs:** Menülogika tesztelése.
 
-
+---
 
 ### Programozási Nyelv
 - **C#**
