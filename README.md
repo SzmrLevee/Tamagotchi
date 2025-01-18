@@ -82,6 +82,29 @@ Ez a Tamagotchi típusú játék egy virtuális kisállat gondozását teszi leh
   - `UjFiok()`: Új fiók létrehozása.
   - `Fomenu()`: A főmenü megjelenítése.
 
+#### JatekmenetView
+- **Felelősség:** A játék logikáját és vizuális elemeit kezeli.
+- **Fő metódusok:**
+  - `MainFuttatasa()`: A játék fő folyamatának futtatása.
+  - `RunAnimationLoop()`: Animációs ciklus vezérlése.
+
+#### ShopMenu
+- **Felelősség:** A bolt működését kezeli.
+- **Fő metódusok:**
+  - `DisplayShopMenu()`: A bolt menüjének megjelenítése.
+  - `ExecutePurchase()`: Vásárlási folyamat lebonyolítása.
+
+#### RandomInterakciok
+- **Felelősség:** A kisállat életét színesítő véletlen eseményekért, mint a betegség vagy sérülés.
+- **Fő metódusok:**
+  - `RandomInteraction()`: Véletlenszerű esemény generálása a kisállattal.
+
+#### FileManager
+- **Felelősség:** JSON fájl alapú adatmentésért és visszatöltésért felel.
+- **Fő metódusok:**
+  - `LoadData<T>()`: Adatok betöltése JSON fájlból.
+  - `SaveData<T>()`: Adatok mentése JSON fájlba.
+
 ---
 
 ## Tesztelési Jegyzőkönyv
